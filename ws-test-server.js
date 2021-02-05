@@ -66,8 +66,7 @@ async function handleHello(ws, data) {
 
   // create file
   const stream = fs.createWriteStream(
-    // `/tmp/${msg.room_name}-${msg.user_session_id}.wav`
-    `/tmp/${msg.room_name}-${msg.user_session_id}.webm`
+    `/tmp/${msg.room_name}-${msg.user_session_id}.wav`
     // { flags: "a" }
   );
 
