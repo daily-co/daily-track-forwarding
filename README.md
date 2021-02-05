@@ -55,6 +55,26 @@ Muted/unmuted events will be sent as text messages:
 The Daily media servers will attempt to open and use a new web
 socket connection for each audio track that is part of the call.
 
+## Sending tracks during a call
+
+We've attached `beta...()` functions to the `window` object, for use while
+our audio track forwarding feature is in beta. So, in client-side
+javascript code, you can do this:
+
+```
+// start forwarding audio tracks
+//
+await window.betaStartTrackForwarding({ wsUri: 'http://79178811e590.ngrok.io' });
+
+// stop forwarding audio tracks
+//
+await window.betaStopTrackForwarding();
+
+// get current status of all tracks being forwarded to the socket
+//
+await window.betaGetTrackForwardingStats();
+```
+
 ## Installation of the test utilities in this repo
 
 First, you need gstreamer so that `file-to-ws.js` can pull in an audio file and
@@ -96,23 +116,6 @@ ngrok http http://localhost:7272
 ```
 
 Once the server is up and running, start forwarding audio tracks to it.
-We've attached `beta...()` functions to the `window` object, while
-our audio track forwarding feature is in beta. So, in client-side
-javascript code, you can do this:
-
-```
-// start forwarding audio tracks
-//
-await window.betaStartTrackForwarding({ wsUri: 'http://79178811e590.ngrok.io' });
-
-// stop forwarding audio tracks
-//
-await window.betaStopTrackForwarding();
-
-// get current status of all tracks being forwarded to the socket
-//
-await window.betaGetTrackForwardingStats();
-```
 
 ## Testing by sending audio streams to Google
 
