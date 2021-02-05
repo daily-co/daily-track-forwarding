@@ -1,6 +1,6 @@
 # test utilities for real-time audio track streaming
 
-## how audio is forwarded
+## How audio is forwarded
 
 On the Daily media servers, we take the opus audio streams coming
 from each client, decode the opus and re-encode at 16-bit PCM
@@ -15,7 +15,7 @@ outgoing web socket connection to your server
 and sends an initial text JSON message, which looks like this:
 
 ```
-{ 
+{
   tag: 'hello',
   domain_name: 'team-awesome',
   room_name: 'a-room-with-a-view',
@@ -55,8 +55,7 @@ Muted/unmuted events will be sent as text messages:
 The Daily media servers will attempt to open and use a new web
 socket connection for each audio track that is part of the call.
 
-
-## installation of the test utilities in this repo
+## Installation of the test utilities in this repo
 
 First, you need gstreamer so that `file-to-ws.js` can pull in an audio file and
 decode it. We're using the
@@ -75,8 +74,7 @@ Now the package dependencies should install:
 npm i
 ```
 
-
-## testing by saving audio in a file
+## Testing by saving audio in a file
 
 You can run `ws-test-server.js` to save audio tracks to files
 in your `/tmp` directory.
@@ -116,8 +114,7 @@ await window.betaStopTrackForwarding();
 await window.betaGetTrackForwardingStats();
 ```
 
-
-## testing audio forwarding to google
+## Testing by sending audio streams to Google
 
 You can run `ws-to-google.js` to send audio data to the Google
 Cloud speech to text sevice.
@@ -125,7 +122,7 @@ Cloud speech to text sevice.
 If you don't already have appropriate Google cloud credentials set up,
 create them as described here:
 
-  https://cloud.google.com/docs/authentication/getting-started
+https://cloud.google.com/docs/authentication/getting-started
 
 Then export them so the test server we run can find them:
 
@@ -142,11 +139,11 @@ node ws-to-google.js
 And open a tunnel (if necessary) and start and stop track forwarding
 as described above.
 
-
-## sending a test audio file directly to a web socket server
+## Sending a test audio file directly to your web socket server
 
 It can be useful to test your web socket server without starting and
-stopping actual call audio tracks. Here's how to do that.
+stopping actual call audio tracks. Here's how to do that. `file-to-ws.js`
+implements the sending side of the audio track forwarding protocol.
 
 Start the reference/toy web socket server:
 
@@ -163,45 +160,3 @@ node file-to-ws.js counting-to-ten.ogg
 If everything worked, the newest file in your `/tmp` directory should be a wav
 file which is just the raw bytes that the web socket server got from
 `file-to-ws.js`.
-
-## protocol
-
-The reference web socket server, `ws-test-server.js`, implements the receiver
-side of a very simple protocol. After accepting a connection from a client, it
-waits for a message of the form:
-
-````json
-{
-  tag: 'hello',
-  domain_name: 'team-awesome',
-  room_name: 'a-room-with-a-view',
-  user_session_id: '01234-guid',
-  user_id: 'value-passed-in-via-api',
-  user_name: 'value-passed-in-via-api',
-  muted: true | false
-}```
-
-And responds to that message like so:
-
-```json
-{
-tag: 'ready'
-}
-````
-
-After sending the `ready` message, it expects to receive messages that
-either contain raw audio bytes, or that contain JSON event strings. Check the type
-of the message payload to distinguish between audio bytes and events.
-
-Current events are:
-
-```json
-{"tag":"muted"}
-{"tag":"unmuted"}
-```
-
-`file-to-ws.js` implements the sender side of this protocol.
-
-```
-
-```
